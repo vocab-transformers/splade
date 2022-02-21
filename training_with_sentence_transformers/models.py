@@ -82,6 +82,8 @@ class MLMTransformer(nn.Module):
 
         if tokenizer_name_or_path is not None:
             self.auto_model.config.tokenizer_class = self.tokenizer.__class__.__name__
+            
+        self.auto_model.module.distilbert.embeddings.requires_grad_(False)
 
     def __repr__(self):
         return "MLMTransformer({}) with Transformer model: {} ".format(self.get_config_dict(), self.auto_model.__class__.__name__)
