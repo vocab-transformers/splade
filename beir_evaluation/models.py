@@ -41,7 +41,7 @@ class Splade(torch.nn.Module):
 
     def forward(self, **kwargs):
         out = self.transformer(**kwargs)["logits"]  # output (logits) of MLM head, shape (bs, pad_len, voc_size)
-        return torch.max(torch.log(1 + torch.relu(out)) * kwargs["attention_mask"].unsqueeze(-1), dim=1).values
+        return torch.max(out.relu_().add_(1).log_() * kwargs["attention_mask"].unsqueeze(-1), dim=1).values.float()
 
     def _text_length(self, text: Union[List[int], List[List[int]]]):
         """helper function to get the length for the input text. Text can be either
